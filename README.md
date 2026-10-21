@@ -95,6 +95,8 @@ noaa-weather-bigdata-platform/
     ├── run_storage_comparison.sh    # Đo tốc độ & dung lượng Raw vs Parquet vs Iceberg
     └── kill_worker_fault_test.sh    # Kịch bản kill pod executor giữa chừng để test Fault Tolerance
 
+---
+
 ## 5. Lộ trình 12 Tuần (Milestones)
 
 - [ ] **W1:** Chốt đề tài, câu hỏi nghiên cứu, khảo sát cấu trúc file NOAA ISD & Station Metadata.
