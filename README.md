@@ -11,8 +11,8 @@ Các quan trắc khí tượng toàn cầu tạo ra tập dữ liệu không gia
 
 **Câu hỏi cốt lõi:** *Làm thế nào để một nền tảng phân tán có khả năng mở rộng (scalable distributed platform) xử lý hiệu quả dữ liệu quan trắc thời tiết toàn cầu trong thời gian dài và phát hiện chính xác các dị thường (anomalies) cũng như hiện tượng thời tiết cực đoan theo không gian và thời gian?*
 
-* **Nguồn dữ liệu chính:** [NOAA Integrated Surface Database (ISD) - Global Hourly](https://www.ncei.noaa.gov/products/land-based-station/integrated-surface-database) kết hợp với bảng `Station Metadata` (`isd-history.csv`).
-* **Quy mô dữ liệu mục tiêu:** **30 GB – 80 GB** (Giai đoạn 2000–2025 hoặc tập con trạm đo toàn cầu đảm bảo bài toán xử lý phân tán thực thụ).
+- **Nguồn dữ liệu chính:** [NOAA Integrated Surface Database (ISD) - Global Hourly](https://www.ncei.noaa.gov/products/land-based-station/integrated-surface-database) kết hợp với bảng `Station Metadata` (`isd-history.csv`).
+- **Quy mô dữ liệu mục tiêu:** **30 GB – 80 GB** (Giai đoạn 2000–2025 hoặc tập con trạm đo toàn cầu đảm bảo bài toán xử lý phân tán thực thụ).
 
 ---
 
@@ -46,7 +46,7 @@ Hệ thống được triển khai hoàn toàn trên **Kubernetes (K8s)** theo l
 
 | Thành viên | Họ và Tên | Email / GitHub | Vai trò chính (Role) | Trọng trách cốt lõi |
 | :--- | :--- | :--- | :--- | :--- |
-| **Chính** | **Nguyễn Hữu Chính** | *chinhnguyenhuu1102@gmail.com* | **Platform, K8s & Storage Architect** | Cụm K8s, MinIO, Spark Cluster, Iceberg Catalog; Thiết kế Partitioning; Chủ trì thí nghiệm Storage, Scale-out ($1\rightarrow2\rightarrow4$ workers) & Fault-tolerance (Kill worker). |
+| **Chính (Lead)** | **Nguyễn Hữu Chính** | *chinhnguyenhuu1102@gmail.com* | **Platform, K8s & Storage Architect** | Cụm K8s, MinIO, Spark Cluster, Iceberg Catalog; Thiết kế Partitioning; Chủ trì thí nghiệm Storage, Scale-out ($1\rightarrow2\rightarrow4$ workers) & Fault-tolerance (Kill worker). |
 | **Đăng** | **Đỗ Hải Đăng** | *dononutvem@gmail.com* | **Data Ingestion & Spark ETL Engineer** | Pipeline tải tự động NOAA; Tài liệu chính sách làm sạch & xử lý cờ chất lượng NOAA (Quality Flags); Spark ETL (Raw $\rightarrow$ Parquet/Iceberg) & Join Station Metadata. |
 | **Tuấn** | **Vũ Hoàng Tuấn** | *tin03092006@gmail.com* | **Analytics, Serving & BI Engineer** | Triển khai Trino & Superset trên K8s; Viết Spark Aggregation & 5 nhóm truy vấn Spatio-Temporal SQL; Tính toán Baseline dị thường lịch sử; Xây dựng Dashboard & đo Query Latency. |
 
@@ -54,46 +54,45 @@ Hệ thống được triển khai hoàn toàn trên **Kubernetes (K8s)** theo l
 
 ## 4. Cấu trúc Thư mục (Repository Structure)
 
-```text
-noaa-weather-bigdata-platform/
-├── README.md                        # Tổng quan kiến trúc, hướng dẫn chạy (Reproducible Setup Guide)
-├── docs/                            # Tài liệu báo cáo (Deliverables bắt buộc)
-│   ├── architecture_diagram.png     # Sơ đồ kiến trúc hệ thống
-│   ├── data_cleaning_policy.md      # Chính sách xử lý NOAA Quality Flags & Missing values (TV2)
-│   └── experiment_results/          # Log, bảng số liệu và biểu đồ benchmark (TV1, TV2, TV3)
-├── k8s/                             # Toàn bộ manifest/Helm charts triển khai trên Kubernetes (TV1)
-│   ├── namespaces/
-│   ├── minio/                       # Object Storage
-│   ├── airflow/                     # Hoặc K8s CronJobs cho Ingestion
-│   ├── spark/                       # Spark Operator / Spark Cluster configs
-│   ├── iceberg-catalog/             # REST Catalog / Hive Metastore / Nessie
-│   ├── trino/                       # Distributed SQL Serving engine (TV3 phối hợp TV1)
-│   └── superset/                    # Dashboard BI (TV3 phối hợp TV1)
-├── ingestion/                       # Module tải dữ liệu tự động (TV2)
-│   ├── Dockerfile
-│   ├── download_noaa.py             # Script kéo bulk files từ NOAA & Station Metadata lên MinIO Raw
-│   └── dags/                        # Airflow DAGs (nếu dùng Airflow)
-├── spark-jobs/                      # Code xử lý phân tán PySpark / Scala Spark (TV2 & TV3)
-│   ├── common/                      # Các hàm tiện ích, cấu hình SparkSession + Iceberg
-│   ├── etl/                         # (TV2) Raw -> Curated (Parse, xử lý cờ NOAA, chuẩn hóa, Join)
-│   │   ├── raw_to_parquet.py
-│   │   └── raw_to_iceberg.py
-│   ├── analytics/                   # (TV3) Tính toán thống kê mùa, baseline lịch sử, cực trị
-│   │   └── seasonal_anomalies.py
-│   └── experiments/                 # (TV1) Script tạo các bảng với chiến lược Partition khác nhau
-│       └── partition_layouts.py
-├── serving-analytics/               # Tầng truy vấn và hiển thị (TV3)
-│   ├── trino_queries/               # Các câu SQL bắt buộc (Mandatory Analytics & Benchmark queries)
-│   │   ├── 01_station_coverage.sql
-│   │   ├── 02_seasonal_regional_stats.sql
-│   │   ├── 03_extreme_events.sql
-│   │   ├── 04_station_anomalies.sql
-│   │   └── 05_spatio_temporal_map.sql
-│   └── dashboard_exports/           # File backup cấu hình chart/dashboard của Superset/Grafana
-└── benchmarks/                      # Các kịch bản chạy thực nghiệm tự động (TV1 chủ trì)
-    ├── run_scale_out_test.sh        # Chạy job với 1 -> 2 -> 4 Spark workers
-    ├── run_storage_comparison.sh    # Đo tốc độ & dung lượng Raw vs Parquet vs Iceberg
-    └── kill_worker_fault_test.sh    # Kịch bản kill pod executor giữa chừng để test Fault Tolerance
+    noaa-weather-bigdata-platform/
+    ├── README.md                        # Tổng quan kiến trúc, hướng dẫn chạy (Reproducible Setup Guide)
+    ├── docs/                            # Tài liệu báo cáo (Deliverables bắt buộc)
+    │   ├── architecture_diagram.png     # Sơ đồ kiến trúc hệ thống (Chính)
+    │   ├── data_cleaning_policy.md      # Chính sách xử lý NOAA Quality Flags & Missing values (Đăng)
+    │   └── experiment_results/          # Log, bảng số liệu và biểu đồ benchmark (Chính, Đăng, Tuấn)
+    ├── k8s/                             # Toàn bộ manifest/Helm charts triển khai trên Kubernetes (Chính)
+    │   ├── namespaces/
+    │   ├── minio/                       # Object Storage
+    │   ├── airflow/                     # Hoặc K8s CronJobs cho Ingestion
+    │   ├── spark/                       # Spark Operator / Spark Cluster configs
+    │   ├── iceberg-catalog/             # REST Catalog / Hive Metastore / Nessie
+    │   ├── trino/                       # Distributed SQL Serving engine (Tuấn phối hợp Chính)
+    │   └── superset/                    # Dashboard BI (Tuấn phối hợp Chính)
+    ├── ingestion/                       # Module tải dữ liệu tự động (Đăng)
+    │   ├── Dockerfile
+    │   ├── download_noaa.py             # Script kéo bulk files từ NOAA & Station Metadata lên MinIO Raw
+    │   └── dags/                        # Airflow DAGs (nếu dùng Airflow)
+    ├── spark-jobs/                      # Code xử lý phân tán PySpark / Scala Spark (Đăng & Tuấn)
+    │   ├── common/                      # Các hàm tiện ích, cấu hình SparkSession + Iceberg
+    │   ├── etl/                         # (Đăng) Raw -> Curated (Parse, xử lý cờ NOAA, chuẩn hóa, Join)
+    │   │   ├── raw_to_parquet.py
+    │   │   └── raw_to_iceberg.py
+    │   ├── analytics/                   # (Tuấn) Tính toán thống kê mùa, baseline lịch sử, cực trị
+    │   │   └── seasonal_anomalies.py
+    │   └── experiments/                 # (Chính) Script tạo các bảng với chiến lược Partition khác nhau
+    │       └── partition_layouts.py
+    ├── serving-analytics/               # Tầng truy vấn và hiển thị (Tuấn)
+    │   ├── trino_queries/               # Các câu SQL bắt buộc (Mandatory Analytics & Benchmark queries)
+    │   │   ├── 01_station_coverage.sql
+    │   │   ├── 02_seasonal_regional_stats.sql
+    │   │   ├── 03_extreme_events.sql
+    │   │   ├── 04_station_anomalies.sql
+    │   │   └── 05_spatio_temporal_map.sql
+    │   └── dashboard_exports/           # File backup cấu hình chart/dashboard của Superset/Grafana
+    └── benchmarks/                      # Các kịch bản chạy thực nghiệm tự động (Chính chủ trì)
+        ├── run_scale_out_test.sh        # Chạy job với 1 -> 2 -> 4 Spark workers
+        ├── run_storage_comparison.sh    # Đo tốc độ & dung lượng Raw vs Parquet vs Iceberg
+        └── kill_worker_fault_test.sh    # Kịch bản kill pod executor giữa chừng để test Fault Tolerance
 
 ---
 
