@@ -1,0 +1,33 @@
+# Python & PySpark
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.pytest_cache/
+
+# Data & Logs (Tuyệt đối không push data NOAA lên GitHub)
+*.csv
+*.gz
+*.parquet
+*.orc
+*.avro
+*.log
+data/
+raw_data/
+spark-warehouse/
+metastore_db/
+derby.log
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Secrets & K8s local configs
+*.pem
+*.key
+.env
+kubeconfig
