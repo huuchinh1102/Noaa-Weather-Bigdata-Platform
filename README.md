@@ -54,7 +54,8 @@ Hệ thống được triển khai hoàn toàn trên **Kubernetes (K8s)** theo l
 
 ## 4. Cấu trúc Thư mục (Repository Structure)
 
-   noaa-weather-bigdata-platform/
+```text
+noaa-weather-bigdata-platform/
 ├── README.md                        # Tổng quan kiến trúc, hướng dẫn chạy (Reproducible Setup Guide)
 ├── docs/                            # Tài liệu báo cáo (Deliverables bắt buộc)
 │   ├── architecture_diagram.png     # Sơ đồ kiến trúc hệ thống
@@ -93,8 +94,6 @@ Hệ thống được triển khai hoàn toàn trên **Kubernetes (K8s)** theo l
     ├── run_scale_out_test.sh        # Chạy job với 1 -> 2 -> 4 Spark workers
     ├── run_storage_comparison.sh    # Đo tốc độ & dung lượng Raw vs Parquet vs Iceberg
     └── kill_worker_fault_test.sh    # Kịch bản kill pod executor giữa chừng để test Fault Tolerance
-
----
 
 ## 5. Lộ trình 12 Tuần (Milestones)
 
