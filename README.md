@@ -46,7 +46,7 @@ Hệ thống được triển khai hoàn toàn trên **Kubernetes (K8s)** theo l
 
 | Thành viên | Họ và Tên | Email / GitHub | Vai trò chính (Role) | Trọng trách cốt lõi |
 | :--- | :--- | :--- | :--- | :--- |
-| **Chính (Lead)** | **Nguyễn Hữu Chính** | *chinhnguyenhuu1102@gmail.com* | **Platform, K8s & Storage Architect** | Cụm K8s, MinIO, Spark Cluster, Iceberg Catalog; Thiết kế Partitioning; Chủ trì thí nghiệm Storage, Scale-out ($1\rightarrow2\rightarrow4$ workers) & Fault-tolerance (Kill worker). |
+| **Chính** | **Nguyễn Hữu Chính** | *chinhnguyenhuu1102@gmail.com* | **Platform, K8s & Storage Architect** | Cụm K8s, MinIO, Spark Cluster, Iceberg Catalog; Thiết kế Partitioning; Chủ trì thí nghiệm Storage, Scale-out ($1\rightarrow2\rightarrow4$ workers) & Fault-tolerance (Kill worker). |
 | **Đăng** | **Đỗ Hải Đăng** | *dononutvem@gmail.com* | **Data Ingestion & Spark ETL Engineer** | Pipeline tải tự động NOAA; Tài liệu chính sách làm sạch & xử lý cờ chất lượng NOAA (Quality Flags); Spark ETL (Raw $\rightarrow$ Parquet/Iceberg) & Join Station Metadata. |
 | **Tuấn** | **Vũ Hoàng Tuấn** | *tin03092006@gmail.com* | **Analytics, Serving & BI Engineer** | Triển khai Trino & Superset trên K8s; Viết Spark Aggregation & 5 nhóm truy vấn Spatio-Temporal SQL; Tính toán Baseline dị thường lịch sử; Xây dựng Dashboard & đo Query Latency. |
 
