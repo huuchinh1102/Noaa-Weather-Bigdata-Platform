@@ -46,9 +46,9 @@ Hệ thống được triển khai hoàn toàn trên **Kubernetes (K8s)** theo l
 
 | Thành viên | Họ và Tên | Email / GitHub | Vai trò chính (Role) | Trọng trách cốt lõi |
 | :--- | :--- | :--- | :--- | :--- |
-| **TV1 (Lead)** | *[Điền tên bạn]* | *[Điền email]* | **Platform, K8s & Storage Architect** | Cụm K8s, MinIO, Spark Cluster, Iceberg Catalog; Thiết kế Partitioning; Chủ trì thí nghiệm Storage, Scale-out ($1\rightarrow2\rightarrow4$ workers) & Fault-tolerance (Kill worker). |
-| **TV2** | *[Điền tên TV2]* | *[Điền email]* | **Data Ingestion & Spark ETL Engineer** | Pipeline tải tự động NOAA; Tài liệu chính sách làm sạch & xử lý cờ chất lượng NOAA (Quality Flags); Spark ETL (Raw $\rightarrow$ Parquet/Iceberg) & Join Station Metadata. |
-| **TV3** | *[Điền tên TV3]* | *[Điền email]* | **Analytics, Serving & BI Engineer** | Triển khai Trino & Superset trên K8s; Viết Spark Aggregation & 5 nhóm truy vấn Spatio-Temporal SQL; Tính toán Baseline dị thường lịch sử; Xây dựng Dashboard & đo Query Latency. |
+| **Chính** | **Nguyễn Hữu Chính** | *chinhnguyenhuu1102@gmail.com* | **Platform, K8s & Storage Architect** | Cụm K8s, MinIO, Spark Cluster, Iceberg Catalog; Thiết kế Partitioning; Chủ trì thí nghiệm Storage, Scale-out ($1\rightarrow2\rightarrow4$ workers) & Fault-tolerance (Kill worker). |
+| **Đăng** | **Đỗ Hải Đăng** | *dononutvem@gmail.com* | **Data Ingestion & Spark ETL Engineer** | Pipeline tải tự động NOAA; Tài liệu chính sách làm sạch & xử lý cờ chất lượng NOAA (Quality Flags); Spark ETL (Raw $\rightarrow$ Parquet/Iceberg) & Join Station Metadata. |
+| **Tuấn** | **Vũ Hoàng Tuấn** | *tin03092006@gmail.com* | **Analytics, Serving & BI Engineer** | Triển khai Trino & Superset trên K8s; Viết Spark Aggregation & 5 nhóm truy vấn Spatio-Temporal SQL; Tính toán Baseline dị thường lịch sử; Xây dựng Dashboard & đo Query Latency. |
 
 ---
 
@@ -99,7 +99,7 @@ Hệ thống được triển khai hoàn toàn trên **Kubernetes (K8s)** theo l
 ## 7. Quy tắc Làm việc Nhóm trên Git (Git Workflow)
 1. **Không push trực tiếp lên nhánh `main`**.
 2. Mỗi thành viên khi làm task sẽ tạo nhánh riêng theo cú pháp:
-   * `feat/tv1-<ten-task>` (Ví dụ: `feat/tv1-k8s-minio-setup`)
-   * `feat/tv2-<ten-task>` (Ví dụ: `feat/tv2-noaa-ingestion`)
-   * `feat/tv3-<ten-task>` (Ví dụ: `feat/tv3-trino-queries`)
+   * `feat/chinh-<ten-task>` (Ví dụ: `feat/chinh-k8s-minio-setup`)
+   * `feat/dang-<ten-task>` (Ví dụ: `feat/dang-noaa-ingestion`)
+   * `feat/tuan-<ten-task>` (Ví dụ: `feat/tuan-trino-queries`)
 3. Sau khi hoàn thành, tạo **Pull Request (PR)** vào `main` và tag ít nhất 1 thành viên khác vào Review trước khi Merge.
