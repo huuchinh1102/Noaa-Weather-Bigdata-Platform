@@ -54,12 +54,45 @@ Hệ thống được triển khai hoàn toàn trên **Kubernetes (K8s)** theo l
 
 ## 4. Cấu trúc Thư mục (Repository Structure)
 
-    ├── docs/                            # Tài liệu thiết kế, Cleaning Policy & kết quả Benchmark
-    ├── k8s/                             # Manifests/Helm charts triển khai K8s (MinIO, Spark, Trino, Superset)
-    ├── ingestion/                       # Script & DAGs tải dữ liệu tự động từ NOAA lên MinIO Raw
-    ├── spark-jobs/                      # Code PySpark/Scala: ETL, Aggregation và Partitioning Experiments
-    ├── serving-analytics/               # Các truy vấn SQL trên Trino & file cấu hình Dashboard Superset
-    └── benchmarks/                      # Script tự động chạy thực nghiệm Scale-out, Storage & Fault-recovery
+   noaa-weather-bigdata-platform/
+├── README.md                        # Tổng quan kiến trúc, hướng dẫn chạy (Reproducible Setup Guide)
+├── docs/                            # Tài liệu báo cáo (Deliverables bắt buộc)
+│   ├── architecture_diagram.png     # Sơ đồ kiến trúc hệ thống
+│   ├── data_cleaning_policy.md      # Chính sách xử lý NOAA Quality Flags & Missing values (TV2)
+│   └── experiment_results/          # Log, bảng số liệu và biểu đồ benchmark (TV1, TV2, TV3)
+├── k8s/                             # Toàn bộ manifest/Helm charts triển khai trên Kubernetes (TV1)
+│   ├── namespaces/
+│   ├── minio/                       # Object Storage
+│   ├── airflow/                     # Hoặc K8s CronJobs cho Ingestion
+│   ├── spark/                       # Spark Operator / Spark Cluster configs
+│   ├── iceberg-catalog/             # REST Catalog / Hive Metastore / Nessie
+│   ├── trino/                       # Distributed SQL Serving engine (TV3 phối hợp TV1)
+│   └── superset/                    # Dashboard BI (TV3 phối hợp TV1)
+├── ingestion/                       # Module tải dữ liệu tự động (TV2)
+│   ├── Dockerfile
+│   ├── download_noaa.py             # Script kéo bulk files từ NOAA & Station Metadata lên MinIO Raw
+│   └── dags/                        # Airflow DAGs (nếu dùng Airflow)
+├── spark-jobs/                      # Code xử lý phân tán PySpark / Scala Spark (TV2 & TV3)
+│   ├── common/                      # Các hàm tiện ích, cấu hình SparkSession + Iceberg
+│   ├── etl/                         # (TV2) Raw -> Curated (Parse, xử lý cờ NOAA, chuẩn hóa, Join)
+│   │   ├── raw_to_parquet.py
+│   │   └── raw_to_iceberg.py
+│   ├── analytics/                   # (TV3) Tính toán thống kê mùa, baseline lịch sử, cực trị
+│   │   └── seasonal_anomalies.py
+│   └── experiments/                 # (TV1) Script tạo các bảng với chiến lược Partition khác nhau
+│       └── partition_layouts.py
+├── serving-analytics/               # Tầng truy vấn và hiển thị (TV3)
+│   ├── trino_queries/               # Các câu SQL bắt buộc (Mandatory Analytics & Benchmark queries)
+│   │   ├── 01_station_coverage.sql
+│   │   ├── 02_seasonal_regional_stats.sql
+│   │   ├── 03_extreme_events.sql
+│   │   ├── 04_station_anomalies.sql
+│   │   └── 05_spatio_temporal_map.sql
+│   └── dashboard_exports/           # File backup cấu hình chart/dashboard của Superset/Grafana
+└── benchmarks/                      # Các kịch bản chạy thực nghiệm tự động (TV1 chủ trì)
+    ├── run_scale_out_test.sh        # Chạy job với 1 -> 2 -> 4 Spark workers
+    ├── run_storage_comparison.sh    # Đo tốc độ & dung lượng Raw vs Parquet vs Iceberg
+    └── kill_worker_fault_test.sh    # Kịch bản kill pod executor giữa chừng để test Fault Tolerance
 
 ---
 
